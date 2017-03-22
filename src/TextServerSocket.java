@@ -75,6 +75,7 @@ public class TextServerSocket extends Thread {
             System.out.println("body content：" + body);
             System.out.println("receive complete");
 
+            //sleep(3000);
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
             String result = "received message!";
             byte[] resultBytes = result.getBytes();
