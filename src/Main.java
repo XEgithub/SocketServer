@@ -3,8 +3,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        dealText();
-        // dealFile();
+        //dealText();
+        dealFile();
     }
 
     private static void dealText() {

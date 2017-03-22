@@ -30,7 +30,7 @@ public class FileServerSocket extends Thread {
         while (true) {
             try {
                 System.out.println("开始监听...");
-							/*
+                            /*
 							 * 如果没有访问它会自动等待
 							 */
                 Socket socket = server.accept();
@@ -50,47 +50,59 @@ public class FileServerSocket extends Thread {
      * @throws IOException
      */
     public static void receiveFile(Socket socket) throws IOException {
-        DataInputStream dis = null;
-        FileOutputStream fos = null;
+        DataInputStream dataInputStream = null;
+        FileOutputStream fileOutputStream = null;
         String dirFilePath = "E:/temp";
+        DataOutputStream dataOutputStream = null;
         try {
-            try {
-                dis = new DataInputStream(socket.getInputStream());
-                File dirFile = new File(dirFilePath);
-                if (!dirFile.exists()) {
-                    dirFile.mkdir();
-                }
-                // 读取文件名长度值
-                byte[] fileNameLengthBytes = new byte[4];
-                dis.read(fileNameLengthBytes, 0, 4);
-                int fileNameLength = DataTypeUtil.bytesToInt(fileNameLengthBytes, 0);
-                // 读取文件名
-                byte[] fileNameBytes = new byte[fileNameLength];
-                dis.read(fileNameBytes, 0, fileNameLength);
-                String fileName = new String(fileNameBytes);
-                System.out.println("接收文件名：" + fileName);
-				/*
-				 * 文件存储位置
-				 */
-                fos = new FileOutputStream(new File(dirFile, fileName));
-                byte[] inputByte = new byte[1024];
-                int length = 0;
-                System.out.println("开始接收数据...");
-                while ((length = dis.read(inputByte, 0, inputByte.length)) > 0) {
-                    fos.write(inputByte, 0, length);
-                    fos.flush();
-                }
-                System.out.println("完成接收");
-            } finally {
-                if (fos != null)
-                    fos.close();
-                if (dis != null)
-                    dis.close();
-                if (socket != null)
-                    socket.close();
+            dataInputStream = new DataInputStream(socket.getInputStream());
+            File dirFile = new File(dirFilePath);
+            if (!dirFile.exists()) {
+                dirFile.mkdir();
             }
+            // 读取文件名长度值
+            byte[] fileNameLengthBytes = new byte[4];
+            dataInputStream.read(fileNameLengthBytes, 0, 1);
+            int fileNameLength = fileNameLengthBytes[0];//DataTypeUtil.bytesToInt(fileNameLengthBytes, 0);
+            // 读取文件名
+            byte[] fileNameBytes = new byte[fileNameLength];
+            dataInputStream.read(fileNameBytes, 0, fileNameLength);
+            String fileName = new String(fileNameBytes);
+            System.out.println("接收文件名：" + fileName);
+
+            fileOutputStream = new FileOutputStream(new File(dirFile, fileName));
+            byte[] inputByte = new byte[1024];
+            int length;
+            //double sumL = 0;
+            System.out.println("开始接收数据...");
+            while ((length = dataInputStream.read(inputByte, 0, inputByte.length)) > 0) {
+                //System.out.println("已传输：" + ((sumL / l) * 100) + "%");
+                fileOutputStream.write(inputByte, 0, length);
+                fileOutputStream.flush();
+            }
+            System.out.println("完成接收");
+
+            dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            String result = "received message!";
+            byte[] resultBytes = result.getBytes();
+            int resultLength = resultBytes.length;
+            System.out.println("result length：" + resultLength);
+            dataOutputStream.write(resultLength);
+            dataOutputStream.write(resultBytes);
+            dataOutputStream.flush();
+
+
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (fileOutputStream != null)
+                fileOutputStream.close();
+            if (dataInputStream != null)
+                dataInputStream.close();
+            if (dataOutputStream != null)
+                dataOutputStream.close();
+            if (socket != null)
+                socket.close();
         }
     }
 }

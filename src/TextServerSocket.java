@@ -66,7 +66,7 @@ public class TextServerSocket extends Thread {
             int bodyLength = bodyLengthBytes[0];//DataTypeUtil.bytesToInt(headerLengthBytes, 0);
             // 读取消息体
             byte[] bodyBytes = new byte[bodyLength];
-            //int length = 0;
+
             System.out.println("start receiving...");
             dataInputStream.read(bodyBytes, 0, bodyLength);
             String body = new String(bodyBytes);
