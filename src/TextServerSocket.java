@@ -1,8 +1,7 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 
 /**
  * Created by xiajun on 2017/3/17.
@@ -50,41 +49,44 @@ public class TextServerSocket extends Thread {
 
         try {
             dataInputStream = new DataInputStream(socket.getInputStream());
-            // 读取头部长度值
-            byte[] headerLengthBytes = new byte[4];
-            dataInputStream.read(headerLengthBytes, 0, 1);
-            int headerLength = headerLengthBytes[0];//DataTypeUtil.bytesToInt(headerLengthBytes, 0);
-            // 读取头部
-            byte[] headerBytes = new byte[headerLength];
-            dataInputStream.read(headerBytes, 0, headerLength);
-            String header = new String(headerBytes);
-            System.out.println("header：" + header);
+            if (dataInputStream.available()>0) {
+                // 读取头部长度值
+                byte[] headerLengthBytes = new byte[4];
+                dataInputStream.read(headerLengthBytes, 0, 1);
+                int headerLength = headerLengthBytes[0];//DataTypeUtil.bytesToInt(headerLengthBytes, 0);
+                // 读取头部
+                byte[] headerBytes = new byte[headerLength];
+                dataInputStream.read(headerBytes, 0, headerLength);
+                String header = new String(headerBytes);
+                System.out.println("header：" + header);
 
-            // 读取消息体长度值
-            byte[] bodyLengthBytes = new byte[4];
-            dataInputStream.read(bodyLengthBytes, 0, 1);
-            int bodyLength = bodyLengthBytes[0];//DataTypeUtil.bytesToInt(headerLengthBytes, 0);
-            // 读取消息体
-            byte[] bodyBytes = new byte[bodyLength];
+                // 读取消息体长度值
+                byte[] bodyLengthBytes = new byte[4];
+                dataInputStream.read(bodyLengthBytes, 0, 1);
+                int bodyLength = bodyLengthBytes[0];//DataTypeUtil.bytesToInt(headerLengthBytes, 0);
+                // 读取消息体
+                byte[] bodyBytes = new byte[bodyLength];
 
-            System.out.println("start receiving...");
-            dataInputStream.read(bodyBytes, 0, bodyLength);
-            String body = new String(bodyBytes);
+                System.out.println("start receiving...");
+                dataInputStream.read(bodyBytes, 0, bodyLength);
+                String body = new String(bodyBytes);
 
-            System.out.println("body length：" + body.length());
-            System.out.println("body content：" + body);
-            System.out.println("receive complete");
+                System.out.println("body length：" + body.length());
+                System.out.println("body content：" + body);
+                System.out.println("receive complete");
 
-            //sleep(3000);
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            String result = "received message!";
-            byte[] resultBytes = result.getBytes();
-            int resultLength = resultBytes.length;
-            System.out.println("result length：" + resultLength);
-            dataOutputStream.write(resultLength);
-            dataOutputStream.write(resultBytes);
-            dataOutputStream.flush();
+                //sleep(3000);
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                String s = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
 
+                String result = "message is come from " + s;
+                byte[] resultBytes = result.getBytes();
+                int resultLength = resultBytes.length;
+                System.out.println("result length：" + resultLength);
+                dataOutputStream.write(resultLength);
+                dataOutputStream.write(resultBytes);
+                dataOutputStream.flush();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

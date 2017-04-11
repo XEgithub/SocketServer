@@ -10,8 +10,12 @@ public class Main {
     static ServerSocket server;
 
     public static void main(String[] args) {
-        //dealText();
+        dealText();
         //dealFile();
+        //dealChat();
+    }
+
+    private static void dealChat() {
         try {
             server = new ServerSocket(SOCKET_PORT);
             while (true) {
