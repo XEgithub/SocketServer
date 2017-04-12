@@ -28,11 +28,19 @@ public class UDPServer extends Thread {
                 byte data[] = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(data, data.length);
                 socket.receive(packet);//阻塞
-                String result = new String(packet.getData(), packet.getOffset(), packet.getLength());
+
+                //String result = new String(packet.getData(), packet.getOffset(), packet.getLength());
                 String hostAddress = packet.getAddress().getHostAddress();
+                byte[] bytes = packet.getData();
+                InetAddress serverAddress = InetAddress.getByName(hostAddress);
+                //byte data[] = msg.getBytes();
+                // 创建一个DatagramPacket对象，并指定要讲这个数据包发送到网络当中的哪个地址，以及端口号
+                DatagramPacket packet2 = new DatagramPacket(data, data.length, serverAddress, PORT_TARGET);
+                // 调用socket对象的send方法，发送数据
+                sender.send(packet2);
                 int port = packet.getPort();
-                System.out.println(hostAddress + ":" + port + "--->" + result);
-                send(hostAddress, result);
+                //System.out.println(hostAddress + ":" + port + "--->" + result);
+                //send(hostAddress, result);
             }
         } catch (Exception e) {
             e.printStackTrace();
