@@ -10,9 +10,14 @@ public class Main {
     static ServerSocket server;
 
     public static void main(String[] args) {
-        dealText();
+        //dealText();
         //dealFile();
         //dealChat();
+        listenUdp();
+    }
+
+    private static void listenUdp() {
+        new UDPServer().start();
     }
 
     private static void dealChat() {
@@ -43,4 +48,5 @@ public class Main {
         FileServerSocket server = new FileServerSocket("file thread");
         server.start(); // 启动线程运行
     }
+
 }
