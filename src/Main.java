@@ -17,7 +17,7 @@ public class Main {
     }
 
     private static void listenUdp() {
-        new UDPServer().start();
+        new UDPVoiceServer().start();
     }
 
     private static void dealChat() {

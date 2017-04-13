@@ -6,7 +6,7 @@ import java.net.InetAddress;
 /**
  * Created by xiajun on 2017/4/12.
  */
-public class UDPServer extends Thread {
+public class UDPVoiceServer extends Thread {
     private static int PORT_LISTEN = 4567;
     private static int PORT_TARGET = 7654;
     private static String HOST_TARGET = "192.168.1.107";
@@ -28,7 +28,7 @@ public class UDPServer extends Thread {
                 byte data[] = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(data, data.length);
                 socket.receive(packet);//阻塞
-
+                System.out.println("new data");
                 //String result = new String(packet.getData(), packet.getOffset(), packet.getLength());
                 String hostAddress = packet.getAddress().getHostAddress();
                 byte[] bytes = packet.getData();
