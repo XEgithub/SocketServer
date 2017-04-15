@@ -13,7 +13,17 @@ public class Main {
         //dealText();
         //dealFile();
         //dealChat();
-        listenUdp();
+        //listenUdp();
+        //startGetHostInfoSerivce();
+        startVoiceCall();
+    }
+
+    private static void startVoiceCall() {
+        new VoiceClient().start();;
+    }
+
+    private static void startGetHostInfoSerivce() {
+        new BackHostInfoServer().start();
     }
 
     private static void listenUdp() {
