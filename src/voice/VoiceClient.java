@@ -1,12 +1,15 @@
+package voice;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Map;
 
 /**
  * Created by xiajun on 2017/4/12.
  */
 public class VoiceClient extends Thread {
-    private static int PORT_LISTEN = 3568;
+    private static final int PORT_LISTEN = 3568;
 
     @Override
     public void run() {
@@ -28,6 +31,8 @@ public class VoiceClient extends Thread {
                 String hostAddress = packet.getAddress().getHostAddress();
                 int port = packet.getPort();
                 System.out.println(hostAddress + ":" + port + "--数据长度-->" + packet.getLength());
+
+
                 send(hostAddress, port, packet.getData());
             }
         } catch (Exception e) {

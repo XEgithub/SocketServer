@@ -1,3 +1,5 @@
+import voice.VoiceClient;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -19,7 +21,7 @@ public class Main {
     }
 
     private static void startVoiceCall() {
-        new VoiceClient().start();;
+        new VoiceClient().start();
     }
 
     private static void startGetHostInfoSerivce() {
